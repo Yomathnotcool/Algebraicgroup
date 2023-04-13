@@ -1,0 +1,807 @@
+\documentclass[12pt,a4paper,english]{article}
+\usepackage[a4paper]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[OT2,T1]{fontenc}
+\usepackage[keeplastbox]{flushend}
+\usepackage{tikz-cd}
+
+\usepackage{babel}
+\usepackage{dsfont}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{stmaryrd}
+\usepackage{color}
+\usepackage{array}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{mathtools}
+\usepackage{natbib}
+
+\geometry{top=3cm,bottom=3cm,left=2.5cm,right=2.5cm}
+\setlength\parindent{0pt}
+\renewcommand{\baselinestretch}{1.3}
+
+\newcommand\restr[2]{{% we make the whole thing an ordinary symbol
+  \left.\kern-\nulldelimiterspace % automatically resize the bar with \right
+  #1 % the function
+  \vphantom{\big|} % pretend it's a little taller at normal size
+  \right|_{#2} % this is the delimiter
+  }}
+  
+% definition of the "structure"
+\theoremstyle{plain}
+\newtheorem{thm}{Theorem}[section]
+\newtheorem{lem}[thm]{Lemma}
+\newtheorem{prop}[thm]{Proposition}
+\newtheorem{coro}[thm]{Corollary}
+
+\theoremstyle{definition}
+\newtheorem{defi}[thm]{Definition}
+\newtheorem*{ex}{Example}
+\newtheorem*{rem}{Remark}
+\newtheorem{cla}[thm]{Claim}
+\newtheorem{step}{Step}
+
+
+\title{Classification of a split semisimple group of rank one}
+\date{December 31, 2021}
+\author{Deng Zhiyuan}
+
+
+\begin{document}
+
+\maketitle
+\begin{abstract}
+    The goal of this note is to prove the theorem that when $k$ is algebraic closed, a split semisimple group of rank one is isomorphic to $SL_{2}$ or $PGL_{2}$. There are two major way to prove this. The first way to use algebraic geometry point view. Assume there is an Borel subgroup $B$ in $G$, then $G/B$ is isomorphic to $\mathbb{P}^{1}$ as a flag variety. Then using the universal cover and Picard group, we can have an effective way to understand this theorem. \footnote{But so far the detail is out of reach, which is not presented here but only some new definitions for further self-study of scheme theory.} The second way to do this is relied on Chevally's isogeny theorem and isomorphism theorem to classify the root datum, which is acceptable when it's rank one. It's cumbersome for rank two, which should be one of the motivation to deal algebraic group as group scheme \footnote{The motivation for group scheme language is based on personal understanding without historic references}.
+\end{abstract}
+\vspace{0.5cm}
+
+
+\vspace{0.5cm}
+
+\section{Definitions and Some Supplement}
+This part is aimed to recall some definitions we have learned in courses and bring more new technologies to deal with this puzzle. Some of the new fancy stuff are preparing the "algebraic geometry way" of proof which doesn't present in this note. The goal to put it here is for self-study.
+\begin{defi}
+Let $X$ be a variety with a point $x\in X$. We say $X$ is regular at $x$ if $\mathcal{O}_{X,x}$ is regular local. We say $X$ is regular if it is regular at every $x$.
+\end{defi}
+\begin{rem}
+\begin{enumerate}
+    \item Smooth at $x\Rightarrow $ regular at $x$. Conversely, regular at $x$ $\leftrightarrow$ smooth at $x$ when $k$ is perfect\cite{LiuQing2002algebraic}. 
+    \item regularity can be lost upon inseparable field extension.
+    \item smoothness is unchanged by field extension.
+\end{enumerate}
+\end{rem}
+\begin{defi}
+Let $G$ be a smooth, connected linear algebraic group. Its radical $R(G)$ is the largest smooth connected solvable normal subgroup.
+
+Its unipotent radical $R_{u}(G)\leq R(G)$ is the largest smooth connected unipotent normal subgroup of $G$.
+\end{defi}
+
+\begin{defi}
+$G$ semisimple $\Leftrightarrow\ R(G_{\bar{k}})=1$ is trivial.
+
+$G$ reductive $\Leftrightarrow\ R_{u}(G_{\bar{k}})=1$ is trivial.
+
+Note semisimple $\Rightarrow$ reductive.
+\end{defi}
+\begin{thm}
+$R(G)$ is the identity component of the intersection $B$ of all the Borel subgroups of $G$.\footnote{A Borel subgroup of $G$ is a maximal Zarisiki-closed smooth connected solvable subgroup of $G$. And since we are dealing with $k=\bar{k}$, Borel subgroup is also the minimal parabolic subgroup. So the $G/B$ as a complete variety is as big as possible.}
+\end{thm}
+\begin{proof}
+Since all the Borel subgroups are conjugate, $\bigcap B$ is normal, it is not hard to see that $(\bigcap B)^{\circ}$ is also normal hence a connected normal solvable subgroup of $G$. Thus by definition, $(\bigcap B)^{\circ}\subset R(G)$.
+
+On the other hand, $R(G)$ is a connected solvable normal subgroup and hence contained in every Borel subgroup so $R(G)\subset \bigcap B$. Thus $R(G)\subset (\bigcap B)^{\circ}$.
+\end{proof}
+\begin{defi}
+$G$ is a torus $\Leftrightarrow$ $G_{\bar{k}}\cong \mathbb{G}^{n}_{m,\bar{k}}$ for some $n\geq 0$.
+\end{defi}
+
+
+Recall the definition of "subnormal series" or "filtration" is sequence of normal subgroups
+\begin{equation*}
+    G=G_{0}\vartriangleright G_{1}\vartriangleright G_{2}\vartriangleright...\vartriangleright G_{s}=\{1\}.
+\end{equation*}
+This gives quotients $G_{0}/G_{1}, G_{1}/G_{2},...,G_{s-1}/G_{s}$.
+
+We call such a series a normal series if furthermore $G\vartriangleright G_{i}$.
+
+The derived series of $G$ is $G\vartriangleright\mathcal{D}G\vartriangleright\mathcal{D}^{2}G\vartriangleright...\vartriangleright\mathcal{D}^{n}G\vartriangleright...$, in which denoted $\mathcal{D}G:=[G,G]$.
+
+By the way, Let's recall the definition of solvable:
+\begin{defi}
+We say $G$ is solvable if there exists a subnormal series $(G_{i})$ with commutative quotients $G_{i-1}/G_{i}$. Equivalently, $\mathcal{D}^{n}G=\{1\}$ for some $n$.
+\end{defi}
+
+\begin{defi}
+A smooth connected, linear algebraic group $G$ is split if there exists a Borel $B\leq G$ which is a split solvable group over $k$. Here a connected solvable linear algebraic group $B$ is called split over $k$ if it is defined over $k$ and has a composition series 
+\begin{equation*}
+    \{1\}=B_{t}\subset ...\subset B_{1}\subset B_{0}=B,
+\end{equation*}
+such that the $B_{i}$ are connected algebraic subgroups defined over $k$ and each quotient group $B_{i}/B_{i+1}$ is isomorphic over $k$ to either a one-dimensional torus $\mathbb{G}_{m}\cong GL_{1}$ or to the additive one-dimensional group $\mathbb{G}_{a}$.
+\end{defi}
+\begin{rem}
+\begin{enumerate}
+    \item $G$ split $\Rightarrow$ $G$ has a split maximal torus. 
+    \item A reductive group becomes split after a separable extension.
+    \item Quotients of split groups are split.
+    \item All split Borel subgroups are $G(k)$-conjugate.
+    \item Every split solvable subgroup is contained in a split Borel.
+    \item If $G$ is split, all split maximal tori are $G(k)$-conjugate. 
+\end{enumerate}
+\end{rem}
+
+\begin{defi}
+Let $G$ be some smooth, connected linear algebaic group, and fix a maximal torus $T\leq G$.
+\begin{enumerate}
+    \item If $k=\bar{k}$, the rank of $G$ is rank $G:=\textbf{dim} T$;
+    \item If $k=\bar{k}$, the geometric rank of $G$ is rank $G:= \text{rank}(G_{\bar{k}})$. The $k$-rank of $G$ is the dimensional of the largest split torus of $G$.
+\end{enumerate}
+\end{defi}
+
+\begin{defi}
+If $G$ is reductive over $\bar{k}$, we define its semisimple rank to be rank($G/R(G)$). For general $k$, its seimsimple rank is s.s.rank($G_{\bar{k}}$), while its semisimple $k$-rank is the $k$-rank of $G/R(G)$.
+\end{defi}
+
+\begin{ex}
+rank($GL_{n}$)=$n$, rank($SL_{n}$)=$n-1$, s.s.rank($GL_{2}$)= rank($PGL_{n}$)=$n-1$. 
+($PGL_{n}$ isogeneous to $SL_{n}$.)
+\end{ex}
+\begin{defi}
+An alegbraic torus $T$ over a field $k$ is said to be split if $T\cong \mathbb{G}^{n}_{m}$ over $k$ or equivalently 
+\begin{equation*}
+    X^{*}(T)_{k}=\textbf{Hom}_{k}(T,\mathbb{G}_{m})\cong \mathbb{Z}^{n}.
+\end{equation*}
+
+This definition adopts because $k=\bar{k}$.
+
+A algebraic torus $T$ is said to be anisotropic if 
+\begin{equation*}
+    X^{*}(T)_{k}=\textbf{Hom}_{k}(T,\mathbb{G}_{m})=\{Id\}.
+\end{equation*}
+\end{defi}
+\begin{defi}
+Let $G,\ G'$ be smooth, connected algebraic groups. A isogeny $\phi:G\rightarrow G'$ is a surjective homomorphism with finite kernel.
+\end{defi}
+\begin{rem}
+Since an isogeny $f$ induces an isomorphism of Lie algebras, any property of the group that is really a property of the Lie algebra is evidently invariant. So things like being semisimple and being reductive are invaiant by isogeny, as are semisimple and reductive ranks. The fundamental example of a necessary global characteristic that is not invariant is the fundamental group. Evidently, if $G$ is simply connected the fundamental group of $H$ is $\textbf{ker}(f)$.
+\end{rem}
+\begin{rem}
+And we need to be careful about the word: \textit{finite}. Algebraic groups are not just a group.
+
+So let's define the word finite here:
+\begin{defi}
+Every finite group $G$ can be realized as a subgroup of some $GL_{n}(k)$, via
+\begin{equation*}
+    G\hookrightarrow\textbf{Sym}_{n}\hookrightarrow GL_{n}(k)\footnote{The first injection is because of Cayley's theorem. We can write permutation as permutation matrix.}
+\end{equation*}
+
+The group $G$ is indeed defined by polynomials, simply because it is a finite set. Indeed, a single element $g\in G$ can be clearly defined by $n^{2}$ linear equations, and a finite union of algebraic varieties is still algebraic variety. 
+\end{defi}
+\end{rem}
+\begin{rem}
+For algebraic groups, everything is tricky. The word surjective or injective is not going to be so easy as well.
+
+Recall the homomorphism between algebraic groups:
+\begin{defi}
+\begin{enumerate}
+    \item Let $G, G'$ be affine algebraic groups. A homomorphism of algebraic groups $\phi: G\rightarrow G'$ is a group homomorphism is also a morphism of varieties.
+    \item More precisely, A homomorphism of algebraic groups from $G$ to $G'$ is a morphism $f: G\rightarrow G'$ of algebraic varieties over $k$ such that the diagram:
+    \begin{center}
+        % https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZABgBpiBdUkANwEMAbAVxiRAHEAdTvAW3gD6wANYBfdiFGl0mXPkIoATOSq1GLNhKkzseAkTIBGVfWatEHbn0EjxAcknSQGXfKLLj1UxovsHo1RgoAHN4IlAAMwAnCF4kMhAcCCRlNTM2bjQACywrLH44TJzHSJi4xENqJKQAZi91cxAirBKQaNj4quSK+vSLOO02spSu2t6fEF5-ClEgA
+\begin{tikzcd}
+G\times_{k}G \arrow[d, "f\times f"] \arrow[rr, "m"] &  & G \arrow[d, "f"] \\
+G\times_{k}G' \arrow[rr, "m'"]                           &  & G'                 
+\end{tikzcd}
+    \end{center}
+\end{enumerate}
+\end{defi}
+
+\begin{enumerate}
+    \item[Onto]: Let $f: G\rightarrow G'$ be a homomorphism of algebraic groups, with the comorphism $f^{*}:k[H]\rightarrow k[G]$. A homomorphism $f$ is said to be surjective if $f^{*}$ is injective.
+    \item[1-1]:  A homomorphism of affine algebraic groups is a monomorphism if and only if it is a closed immersion, which means  the $f^{*}$ is surjective.
+\end{enumerate}
+
+So the definition works. And the good thing is for algebraic closed field we are working with, the definition can be taken as: 
+$f: G\rightarrow G’$ is surjective (reps. injective), if and only if $G(k)=G'(k)$ is surjective (reps. injective);
+
+\end{rem}
+\begin{lem}\label{lemonto}
+Solvable is invariant under isogeny.
+\end{lem}
+\begin{proof}
+For solvable, look at the derived series, which can be shown by onto. 
+
+First we show that normal subgroup under surjective homomorphism is still normal subgroup.
+\begin{equation*}
+    \phi(a)\phi(H)=\phi(aH)=\phi(Ha)=\phi(H)\phi(a), 
+\end{equation*}
+for every $a\in G$. Since $\phi$ is surjective, $\phi(H)$ is a normal subgroup of $G'$. 
+
+Then let's show the solvability.
+Let $G$ be a solvable group, $f:G\rightarrow G'$. The goal is to show that $G'$ is also solvable.
+Then there exists a sequence of subgroups of $G$:
+\begin{equation*}
+    \{e\}=H_{r}\triangleleft H_{r-1}\triangleleft...\triangleleft H_{1}\triangleleft H_{0}=G
+\end{equation*}
+ such that $H_{i+1}\triangleleft H_{i}$ for all $i=0,1,...,r-1$, and such that $H_{i}/H_{i+1}$ is abelian.
+ 
+ We know that $f(H_{i})\triangleleft G',\ \forall i=0,1,...,r-1$. Also, $f(H_{i})\triangleleft f(H_{i-1}),\ \forall i=0,1,...,r-1$. Thus we get 
+ \begin{equation*}
+     \{e\}=f(H_{r})\triangleleft f(H_{r-1})\triangleleft...\triangleleft f(H_{1})\triangleleft f(H_{0}=G)=G'.
+ \end{equation*}
+ Let's consider some elements $k, l \in f(H_i)$. By definition of $f(H_i)$, there exist elements $g,h \in H_i$ such that $k=f(g), l=f(h)$
+
+Since $H_i/H_{i+1}$ is abelian, $H_{i+1}$ contains the commutator subgroup of $H$. That is, for every $g, h \in H_i$, $g^{-1}h^{-1}gh \in H_{i+1}$.
+
+This means that $f(g^{-1}h^{-1}gh)=f(g)^{-1}f(h)^{-1}f(g)f(h)=k^{-1}l^{-1}kl \in f(H_{i+1})$. Thus, every commutator of $f(H_i)$ is in $f(H_{i+1})$, so $f(H_{i+1})$ contains the commutator subgroup of $f(H_i)$. This means that $f(H_i)/f(H_{i+1})$ is abelian.
+\end{proof}
+
+\begin{lem}\label{lem1}
+$k=\bar{k}$, Suppose $\mathbb{G}_{m}$ acts linerly on a finte dimensional $k$-vector space $V$. Let $Y\subset \mathbb{P}V:=\{l\subset V| l\ \text{is one dimensional subspace of}\ V\}$ be a $\mathbb{G}_{m}$-stable subvariety of dimension $d$. Then 
+\begin{equation*}
+    \# Y^{\mathbb{G}_{m}}(k)\geq d+1.
+\end{equation*}
+\end{lem}
+\begin{proof}
+Let's do induction on $d=\textbf{dim}(Y)$. Without loss of generality, we can assume $\mathbb{P}V=\mathbb{P}^{n}$ with each $t\in \mathbb{G}_{m}$ acting as $(x_{0}:...:x_{n})\mapsto (t^{m_{0}}x_{0}:...:t^{m_{n}}x_{n})$ with $m_{0}\leq ...\leq m_{n}$ in $\mathbb{Z}$. Also, we may assume $m_{0}=0$. And assume $Y$ is irreducible ($\mathbb{G}_{m}$ must preserve the irreducible components since $\mathbb{G}_{m}$ connected. We have homomorphism from $\mathbb{G}_{m}$ into premutation group of components. Alternatively, if you have a point of $y$, its orbit is connected/irreducible.)
+
+Write $\mathbb{P}^{n}=\mathbb{P}^{n-1}\coprod\mathbb{A}^{n}$ (with the $\mathbb{P}^{n-1}$ where $x_{0}=0$). If $Y\subset \mathbb{P}^{n-1}$, one can start over with smaller $V$. Otherwise, $Y$ has $\geq d$ fixed points in $\mathbb{P}^{n-1}$ (by inductive hypothesis applied to $Y\bigcap\mathbb{P}^{n-1}$). Hence, we only need to show it has $\geq 1$ fixed point in $\mathbb{A}^{n}$. For this, choose some $y=(1:a_{1}:...:a_{n})\in Y\bigcap\mathbb{A}^{n}$, and take the limit $\lim\limits_{t\rightarrow 0}t.y=\lim\limits_{t\rightarrow 0}\lambda(t)y\lambda(t)^{-1}$ exists since all exponents are positive; This lies in $\mathbb{A}^{n}$ and is fixed by $\mathbb{G}_{m}$.
+\end{proof}
+\begin{rem}
+This is an improvement on Borel's fixed point theorem which gives at least 1 fixed point in this case. 
+
+Recall that Borel's fixed point theorem:
+\begin{thm}
+Let $G$ be a split solvable group. Let $X$ be a proper $k-$ variety with a $k-$ point $x\in X(k)$. Say $G$ acts on $X$. Then, there exists a $G$-fixed point $z\in X(k)$.
+\end{thm}
+\end{rem}
+\begin{thm}
+$N_{G}(B)=B$, This is from\cite{milneiAG}, which proof is omitted. 
+\end{thm}
+\begin{coro}
+Over $k=\bar{k}$, all Borels are conjugate (one orbit under conjugation action), so we state the result:
+\begin{equation*}
+    G/\textbf{Stab}_{G}(B)=G/N_{G}(B)=G/B.
+\end{equation*}
+This is a flag variety\footnote{flag variety is projective.}.
+
+Recall the definition of flag variety:
+\begin{defi}
+Let $1\geq_{1}<...< d_{m}< n$ be an increasing sequence of integers. Put \begin{equation*}
+    V_{d_{1},...,d_{m}}=\{W_{1}\subset W_{2}\subset ...\subset W_{m}\subset k^{n},\textbf{dim}W_{i}=d_{i},1\geq i\geq n\},
+\end{equation*}
+in which $W_{i}$ are linear subspace. It can be shown that the map:
+\begin{align*}
+    V_{d_{1},...,d_{m}}&\rightarrow G_{d_{1},n}\times ...\times G_{d_{m},n}\footnote{$G_{d,n}$ is so called Grassmann varieties.}\\
+    (W_{1}\subset W_{2}\subset...\subset W_{m})&\rightarrow  (W_{1},...,W_{m}).
+\end{align*}
+identifies $V_{d_{1},..,d_{m}}$ with a closed subvariety of the projective variety $G_{d_{1},n}\times ...\times G_{d_{m},n}$.
+\end{defi}
+\end{coro}
+\begin{rem}
+Let $G$ be an algebraic group with $H\leq G$ a subgroup. Then, there exists a subgroup $N=N_{G}(H)\leq G$ such that
+\begin{equation*}
+    N(k)=\{g\in G(k):gHg^{-1}=H\}
+\end{equation*}
+
+
+\end{rem}
+
+\begin{defi}
+Assume $G$ is a smooth connected lineare algebaic group.
+\begin{enumerate}
+    \item If $k=\bar{k}$, a Borel subgroup of $G$ is a maximal smooth connected solvable subgroup of $G$.
+    \item For general $k$, $B\geq G$ is Borel if $B_{\bar{k}}\geq G_{\bar{k}}$ is Borel.
+\end{enumerate}
+\end{defi}
+\begin{rem}
+The radical $R(G)$ is the maximal normal smooth connected solvable subgroup, so the radical is contained in any Borel subgroup.
+\end{rem}
+\begin{thm}\label{chevathm}
+Chevalley's theorem: Let $G$ be a linear algebraic group with closed subgroup $H\leq G$. Then, there exists a finite dimensional representation $V$ of $G$, and a 1-dimensional subspace $L\leq V$ such that $H=\textbf{Stab}_{G}(L)$.
+\end{thm}
+
+\begin{rem}
+The goal of this theorem to construct quotients $G/H$. The idea is to use the orbit-stabilizer theorem, $G/\textbf{Stab}(x)=\textbf{Orbit}(x)$. The question becomes: can every subgroup $H$ be realized as a stabilizer?
+\end{rem}
+
+\begin{rem}
+Recall stabilizer: Given $L$ and $G$ as above, then $\textbf{Stab}_{G}(L)=\{g\in G: gx=x,\forall x\in L\}$.
+
+Recall orbit: $\textbf{Orbit}(x)=\{gx|g\in G\}$
+\end{rem}
+\begin{defi}
+Let $G$ be a group, $X$ the set of all homomorphisms $G\rightarrow K^{*}$. Then $X$ is a linearly independent subset of the space of all $K$-valued functions on $G$.
+
+Based on this property, we define an algebraic group $G$ to be $d$-group if $K[G]$ has a basis consisting of characters. 
+
+Given a $d$-group $G$, any morphism of algebraic groups $\lambda:\mathbb{G}_{m}\rightarrow G$ is called a \textbf{one parameter multiplicative subgroup} of $G$, abbreviated $1-psg$. The set of these denoted $Y(G)$. If we define a product $(\lambda\mu)(a)=\lambda(a)\mu(a)$, it becomes an abelian group. 
+
+Notice that the composite of a $1-psg\ \lambda$ with a character $\kappa$ of $G$ yields a morphism of algebraic groups $\mathbb{G}_{m}\rightarrow\mathbb{G}_{m}$, i.e., an element of $X(G)\cong\mathbb{Z}$ (the set of all characters).
+\end{defi}
+\begin{thm}
+Any projective variety is complete. The proof can be found in \cite{AGMIT}.
+\end{thm}
+\begin{rem}
+Recall complete variety;
+\begin{defi}
+A complete algebraic vavriety is an algebraic variety $X$, such that for any variety $Y$ the projection morphism
+\begin{equation*}
+    X\times Y\rightarrow Y
+\end{equation*}
+is a closed map (i.e. maps closed sets onto closed sets).
+\end{defi}
+\end{rem}
+\begin{thm}
+Let $X$ be a smooth variety of dimension 1, and let $\phi:\mathbb{P}^{1}\rightarrow X$ be a dominant morphism. Then $X$ is isomorphic to $\mathbb{P}^{1}$. $\phi
+$ is not necessarily an isomorphism. 
+
+In which the dominant morphism means that: a morphism $f:X\rightarrow Y$ of algebraic varieteis is said to be a dominant if it had dense image.
+\end{thm}
+\begin{rem}
+By the morphism $\mathbb{G}_{m}\cong T\rightarrow G/B$, we can $G/B$ is dominated by a rational curve. So it must be rational. Since it's smooth, projective over $\bar{k}$, it must be $\mathbb{P}^{1}$.\footnote{This is aimed for the "algebraic geometry" version of proof, which is not fully understood. But it indeed creates some intuitive understanding.}
+\end{rem}
+\begin{thm}
+$PGL_{2}\cong\textbf{Aut}\ \mathbb{P}^{1}$.\footnote{This is an abuse of notation. Rigorously, they are functors. In order not to overcomplicate this, we don't distinguish the notations here. }
+\end{thm}
+\begin{proof}
+\begin{lem}\label{lem20.8}
+Let $\alpha\in\textbf{Aut}(\mathbb{P}^{1})(K)=\textbf{Aut}(\mathbb{P}^{1}_{K})$. If $\alpha(0_{R})=0_{R},\ \alpha(1_{R})=1_{R}$, and $\alpha(\infty_{R})=\infty_{R}$, then $\alpha$ is the identity map.
+\end{lem}
+\begin{proof}
+Let $U_{0}$ (resp.$U_{1}$) denote the complement of $0$(resp.$\infty$) in $\mathbb{P}_{k}^{1}$. Then $\mathbb{P}^{1}_{R}=U_{0R}\bigcup U_{1R}$ with $U_{0R}=\textbf{Spec} R[T]$ and $U_{1R}=\textbf{Spec} R[T^{-1}]$.
+\begin{center}
+\begin{tikzcd}
+U_{0R}                 & U_{0R}\bigcap U_{1R} \arrow[l, hook] \arrow[r, hook] & U_{1R}                      \\
+{R[T]} \arrow[r, hook] & {R[T,T^{-1}]}                                        & {R[T^{-1}]} \arrow[l, hook]
+\end{tikzcd}
+\end{center}
+The automorphism $\alpha$ preserves $U_{0R}$ and $U_{1R}$, and its restrictions to $U_{0R}$ and $U_{1R}$ correspond to $R$-algebra homomorphisms:
+\begin{align*}
+    T&\mapsto P(T)=a_{0}+a_{1}T+P_{2}T^{2}\\
+    T^{-1}&\mapsto Q(T^{-1})=b_{0}+b_{1}T^{-1}+Q_{2}(T^{-1})T^{-2}
+\end{align*}
+such that $P(T)Q(T^{-1})=1$ (equality in $R[T,T^{-1}]$). The coefficient $a_{0}=0$ because $\alpha$ fixes $0_{R}$, and $b_{0}=0$ because $\alpha$ fixes $\infty_{R}$. The equality $PQ=1$ expands to 
+\begin{equation*}
+    a_{1}b_{1}+P_{2}(T)Q_{2}(T^{-1})+b_{1}P_{2}(T)T+a_{1}Q_{2}(T)T^{-1}=1,
+\end{equation*}
+This implies that $P_{2}(T)=0$ because otherwise the degree of $b_{1}P_{2}(T)T$ is greater than that of $P_{2}(T)Q_{2}(T^{-1})$. Similarly, $Q_{2}(T^{-1})=0$. Finally, $a_{1}=1=b_{1}$ because $\alpha$ fixes $1_{R}$, and so $\alpha$ is the identity map.
+\end{proof}
+\begin{lem}\label{lem20.9}
+Let $P_{0}, P_{1}, P_{\infty}$ be distinct points on $\mathbb{P}^{1}$ with coordinates in $R$. If $P_{0}$, $P_{1}$, $P_{\infty}$ remain distinct in $\mathbb{P}^{1}(R/\mathfrak{m})$ for all maximal ideals $\mathfrak{m}$ in $R$, then there exists a unique $\gamma\in PGL_{2}(R)$ such that $\gamma\circ 0_{R}=P_{0}$, $\gamma\circ 1_{R}=P_{1}$, and $\gamma\circ \infty_{R}=P_{\infty}$.
+\end{lem}
+\begin{proof}
+One sees easily that the only elements of $GL_{2}(R)$ fixing $0_{R}, 1_{R}$, and $\infty_{R}$ are the scalar matrices. Therefore $\gamma$ is unique if exists, and it follows that it suffices to prove the existence of $\gamma$ locally. Thus we may suppose that $P_{0}=(x_{0}:y_{0}), P_{1}=(x_{1}:y_{1})$ and $P_{\infty}=(x_{\infty}:y_{\infty})$. Let $\mathfrak{m}$ be a maximal ideal in $R$. Because $P_{0}$ and $P_{\infty}$ are distinct modulo $\mathfrak{m}$, $(x_{\infty}y_{0}-x_{0}y_{\infty})\not=1$ modulo $\mathfrak{m}$. As this is true for all $\mathfrak{m}$, the matrix $A=\bigg(\begin{array}{cc}
+    x_{\infty} & x_{0} \\
+    y_{\infty} & y_{0}
+\end{array}\bigg)$ lies in $GL_{2}(R)$. Note that $A\circ 0_{R}=P_{0}$ and $A\circ \infty_{R}=P_{\infty}$. Let $A^{-1}\bigg(\begin{array}{c}
+     1  \\
+      1
+\end{array}\bigg)=\bigg(\begin{array}{c}
+     x  \\
+      y
+\end{array}\bigg)$. Then $x, y\in R^{\times}$ because $(x:y)$ is distinct from $(0:1)$ and $(1:0)$ module every maximal ideal in $R$. The matrix $B=\bigg(\begin{array}{cc}
+    x & 0 \\
+    0 & y
+\end{array}\bigg)$ fixes $0_{R}$ and $\infty_{R}$ and maps $(1:1)$ to $(x:y)$. The image of $AB$ is required element. 
+\end{proof}
+
+
+Let $\alpha\in\textbf{Aut}(P)^{1}_{R}$. The points $\alpha(0)$, $\alpha(1)$ and $\alpha(\infty)$ satisfy the hypothesis of lemma\ref{lem20.9} above. And so there is a unique $\gamma\in PGL_{2}(R)$ such that $\gamma\circ0=\alpha(0),\gamma\circ1=\alpha(1),\gamma\circ\infty=\alpha(\infty)$. And the lemma\ref{lem20.8} shows that $\gamma$ acts as $\alpha$ on the whole $\mathbb{P}^{1}_{R}$.
+\end{proof}
+
+
+
+
+\begin{defi}
+
+Suppose that $\mathbb{G}_{m}$ acts on an affine variety $X=\textbf{Spec}B$, so $\mathbb{G}
+_{m}$ acts on $B$ as well. Then we get a decomposition $B=\bigoplus\limits_{n\in\mathbb{Z}} B_{n}$. Given $f=\sum_{n}f_{n}\in B$ and $t\in \mathbb{G}_{m}$, then 
+\begin{equation*}
+    t.f=\sum_{n}t^{n}f_{n}.
+\end{equation*}
+For $x\in X(R)$, the following are equivalent:
+\begin{enumerate}
+    \item $\lim\limits_{t\rightarrow0}t.x$ exists
+    \item $\lim\limits_{t\rightarrow0}f(t.x)$ exists for all $f\in B$,$f(t.x)=(t.f)(x)$.
+    \item $\lim\limits_{t\rightarrow0}\sum_{n}t^{n}f_{n}(x)$ exists for all $f=\sum f_{n}\in B$.
+\end{enumerate}
+
+There is a morphism $P\rightarrow X^{\mathbb{G}_{m}}\subset X$ given by $x\mapsto \lim\limits_{t\rightarrow 0} t.x$. Let $G$ be a linear algebraic group, and let $\lambda:\mathbb{G}_{m}\rightarrow G$(homomorphism) be a co-character/1 parameter subgroup. Then we get a $\mathbb{G}_{m}$-action on $G$: $t.g :=\lambda(t)g\lambda(t)^{-1}$. So we can define:
+
+\begin{align*}
+        P(\lambda)&:=\{g\in G:\lim\limits_{t\rightarrow 0} t.g\ exists\}\\
+        Z(\lambda)&:=\{g\in G:t.g=g\ for\ all\ t\in\mathbb{G}_{m}\}=C_{G}(\lambda(\mathbb{G}_{m}))
+\end{align*}
+
+in which $C_{G}(\lambda(\mathbb{G}_{m}))$ is the centralizer.
+\end{defi}
+\begin{rem}
+Recall centraliser:
+Given any subset $S$ of a group $G$, the centralizer of $S$ in $G$, denoted as $C_{G}(S)$, and \begin{equation*}
+    C_{G}(S):=\{x\in G:xg=gx,\forall g\in S\}
+\end{equation*}
+\end{rem}
+\begin{prop}
+$P(\lambda)\bigcap P(\lambda^{-1})=Z(\lambda)$
+\end{prop}
+\begin{proof}
+To prove this, it is not that interesing. So we show an example of this proposition instead of proof.
+
+Assume $G=GL_{2}$. And let $\lambda$ be the homomorphism $t\rightarrow \textbf{diag}(t,t^{-1})$.
+
+\begin{equation*}
+    \bigg(\begin{array}{cc}
+        t & 0 \\
+        0 & t^{-1}
+    \end{array}\bigg)
+    \bigg(\begin{array}{cc}
+        a & b \\
+         c& d
+    \end{array}\bigg)
+    \bigg(\begin{array}{cc}
+        t & 0 \\
+        0 & t^{-1}
+    \end{array}\bigg)^{-1}=
+    \bigg(\begin{array}{cc}
+        a & bt^{2} \\
+         ct^{-2}& d
+    \end{array}\bigg),
+\end{equation*}
+and $\lim\limits_{t\rightarrow0}
+    \bigg(\begin{array}{cc}
+        a & bt^{2} \\
+        ct^{-2} & d
+    \end{array}\bigg)
+$
+exists if and only if $c=0$, in which case the limit is $\bigg(\begin{array}{cc}
+    a &  0\\
+     0& d
+\end{array}\bigg).$
+
+Then
+
+\begin{align*}
+       P(\lambda)&=\bigg\{\bigg(\begin{array}{cc}
+        * & * \\
+        0 & *
+    \end{array}\bigg)\bigg\},
+     P(\lambda^{-1})=\bigg\{\bigg(\begin{array}{cc}
+        * & 0 \\
+        * & *
+    \end{array}\bigg)\bigg\}\\
+    Z(\lambda)&=Z(\lambda^{-1})=\bigg\{\bigg(\begin{array}{cc}
+        * & 0 \\
+        0 & *
+    \end{array}\bigg)\bigg\}
+\end{align*}
+
+\end{proof}
+
+\begin{defi}
+A connected group variety $G$ is simply connected if every multiplicative isogeny $G'\rightarrow G$ of connected group varieties is an isomorphism.
+\end{defi}
+\begin{defi}Assume $k=\bar{k}$. 
+Let $\phi:G'\rightarrow G$ be an isogeny between smooth connected groups. We call $\phi$ multiplicative if $\textbf{ker}\phi$ is diagonalizable. 
+A multiplicative isogeny $\phi: G'\rightarrow G$ is surjective homomorphism of connected group varieties whose kernel is finite of multiplicative type.
+\end{defi}
+\begin{defi}
+A multiplicative isogeny $\tilde{G}\rightarrow G$ of connected group varieties is called a universal covering of $G$ when $\tilde{G}$ is simply connected. Its kernel is denoted $\pi_{1}(G)$, and is called the fundamental group of $G$.
+\end{defi}
+\begin{thm}
+The homomorphism $PGL_{2}\rightarrow \textbf{Aut}(SL_{2})$ is an isomorphism of algebraic groups.
+
+In fact, 
+\begin{equation*}
+    PGL_{2}\cong Aut(GL_{2})\cong Aut(SL_{2})\cong Aut(PGL_{2}).
+\end{equation*}
+\end{thm}
+\begin{rem}
+\begin{enumerate}
+    \item This will be useful for the universal cover version of proof later but the proof for this is omitted.
+    \item In this theorem, it's an abuse of notions, those things are functors.
+\end{enumerate}
+\end{rem}
+\begin{defi}
+Let $T$ be a maximal torus in a connected group variety $G$, The Weyl group $W(G,T)$ of $G$ with respect to $T$ is defined as 
+\begin{equation*}
+    W(G,T)=N_{G}(T)/C_{G}(T).
+\end{equation*}
+\end{defi}
+Now we recall the definitions of root system and root datum.
+
+\begin{defi}
+Let $E$ be a finite-dimensional Euclidean vector space, with the standard Euclidean inner product denoted by $(,)$. A root system $\Phi$ in $E$ is a finite set of non-zero vectors( called roots) that satisfy the following conditions:
+\begin{enumerate}
+    \item The roots span $E$;
+    \item The only scalar multiples of a root $\alpha\in \Phi$ that belong $\Phi$ are $\alpha$ and $-\alpha$.
+    \item For every root $\alpha\in\Phi$, the set $\Phi$ is closed under relection through the hyperplane perpendicular to $\alpha$.
+    \item (Integrality) If $\alpha$ and $\beta$ are roots in $\Phi$, then the projection of $\beta$ onto the line through $\alpha$ is an integer or half-integer.
+\end{enumerate}
+An equivalent way of stating conditions 3 and 4 is as follows:
+\begin{enumerate}
+    \item[3.] For any two roots $\alpha, \beta\in\Phi$, the set $\Phi$ contains the element 
+    \begin{equation*}
+        \sigma_{\alpha}(\beta):=\beta-2\frac{(\alpha,\beta)}{(\alpha,\alpha)}\alpha.
+    \end{equation*}
+    \item[4.] For any two roots $\alpha,\beta\in \Phi$, the number $<\beta,\alpha>:=2\frac{(\alpha,\beta)}{(\alpha,\alpha)}$ is an integer.
+\end{enumerate}
+\end{defi}
+\begin{rem}
+Roughly speaking, root systems keep track of group-theoretic information “up to central isogeny($q(\alpha)=1)$, introduced later)” whereas the root
+datum keeps track of information up to isomorphism. (The root datum viewpoint is also necessary
+for keeping track of the maximal central torus. 
+\end{rem}
+\begin{defi}
+Let $X$ be a free $\mathbb{Z}-$module of finte rank. Let $\check{X}$ denote the linear dual $\textbf{Hom}(X,\mathbb{Z})$ of $X$ and $<,>:X\times\check{X}\rightarrow\mathbb{Z}$ the perfect pairing $<x, f>=f(x)$. Let $R$ be a set of roots.
+
+A root datum is a triple $\mathcal{R}=(X,R,\alpha\rightarrow\check{\alpha})$ in which $X$ is a free abelian group of finite rank, $R$ is a finite subset of $X$, and $\alpha\mapsto\check{\alpha}$ is an injective map from $R$ into the dual $\check{R}$ of $\check{X}$, statisfying:
+\begin{enumerate}
+
+    \item $\sigma_{\alpha}(R)\subset R$ for all $\alpha\in R$, where $\sigma_{\alpha}$ is sthe homomorphism $X\rightarrow X$ defined by 
+    \begin{equation*}
+        \sigma_{\alpha}(\beta)=\beta-<\beta,\check{\alpha}>\alpha,x\in X,\alpha\in R,
+    \end{equation*}
+        \item $<\alpha,\check{\alpha}>=2$ for all $\alpha\in R\Rightarrow \sigma_{\alpha}(\alpha)=-\alpha$.
+    \item the group generated by the automorphism $\sigma_{\alpha}$ of $X$ is finite. It is denoted by $\mathcal{W}(R)$ and it's called the Weyl group of $\mathcal{R}$.
+\end{enumerate}
+\end{defi}
+\begin{ex}
+Let's calculate the roots of groups that we care about.
+\begin{enumerate}
+    \item[$SL_{2}$]: Take $T$ to be the split torus 
+    $T=\bigg\{\bigg(\begin{array}{cc}
+        t & 0 \\
+        0 & t^{-1}
+    \end{array}\bigg)\bigg\}$, then $X^{*}(T)=\mathbb{Z}_{\kappa}$, where $\kappa$ is the character $\textbf{diag}(t,t^{-1})\mapsto t$. The Lie algebra $\mathfrak{g}$ of $SL_{2}$ is \begin{equation*}
+        \mathfrak{sl_{2}}=\bigg\{\bigg(\begin{array}{cc}
+            a & b \\
+            c & d
+        \end{array}\bigg)\in M_{2}(k): a+d=0\bigg\}
+    \end{equation*} 
+    And $T$ acts on $\mathfrak{g}$ by conjugation,
+    \begin{equation*}\bigg(\begin{array}{cc}
+            t & 0 \\
+            0 & t^{-1}
+        \end{array}\bigg)
+\bigg(\begin{array}{cc}
+            a & b \\
+            c & d
+        \end{array}\bigg)\bigg(\begin{array}{cc}
+            t^{-1} & 0 \\
+            0 & t
+        \end{array}\bigg)=
+        \bigg(\begin{array}{cc}
+            a & t^{2}b \\
+            t^{-2}c & -a
+        \end{array}\bigg)
+    \end{equation*}
+    Therefore, the roots are $\alpha=2\kappa$ and $-\alpha=-2\kappa$.
+    \item[$PGL_{2}$]: Recall $PGL_{2}=GL_{2}/\mathbb{G}_{m}$. For all local $k$-algebras $R$, $PGL_{2}(R)=GL_{2}(R)/R^{\times}$. We take $T$ to be the torus
+    \begin{equation*}
+        T=\bigg\{\bigg(\begin{array}{cc}
+            t_{1} & 0 \\
+            0 & t_{2}
+        \end{array}\bigg): t_{1}t_{2}\not=0\bigg\}/\bigg\{\bigg(\begin{array}{cc}
+            t & 0 \\
+            0 & t
+        \end{array}\bigg): t\not=0\bigg\}.
+    \end{equation*}
+    Then $X^{*}(T)=\mathbb{Z}_{\kappa}$, where $\kappa$ is the character $\textbf{diag}(t_{1},t_{2})\mapsto t_{1}/t_{2}$. The Lie algebra $\mathfrak{g}$ of $PGL_{2}$ is 
+    \begin{equation*}
+        \mathfrak{g}=\mathfrak{pgl}_{2}=\mathfrak{gl_{2}}/\{scalar\ matrices\},
+    \end{equation*}
+    and $T$ acts on $\mathfrak{g}$ by conjugation:
+    \begin{equation*}
+        \bigg(\begin{array}{cc}
+            t_{1} & 0 \\
+            0 & t_{2}
+        \end{array}\bigg)\bigg(\begin{array}{cc}
+            a & b \\
+            c & d
+        \end{array}\bigg)\bigg(\begin{array}{cc}
+            t_{1}^{-1} & 0 \\
+            0 & t_{2}^{-1}
+        \end{array}\bigg)=\bigg(\begin{array}{cc}
+            a & \frac{t_{1}}{t_{2}}b \\
+            \frac{t_{2}}{t_{1}}c & d
+        \end{array}\bigg)
+    \end{equation*}
+    Therefore, the roots are $\alpha=\kappa$ and $-\alpha=-\kappa$. 
+\end{enumerate}
+\end{ex}
+\begin{rem}
+$SL_{2}(K)$ and $PGL_{2}(K)$ will be the only semisimple groups of type $A_{1}$ \cite{humphreys2012linear}.
+\end{rem}
+\section{Main result}
+\begin{lem}
+Assume $k=\bar{k}$. The following conditions on a connected group $G$ over $k$ and a Borel subgroup $B$ containing $T$, then the following are equivalent \cite{milneiAG}:
+\begin{enumerate}
+    \item the semisimple rank of $G$ is 1;
+    \item $T$ lies in exactly two Borel subgroups; 
+    \item $\textbf{dim}(G/B)=1$;
+    \item there exists an isogeny $G\rightarrow PGL_{2}$.
+\end{enumerate}
+\end{lem}
+The proof will show in proof of the theorem, but it is nice to keep the equivalence in mind. And in case the proof is too messy, here is a map for the proof:
+\begin{center}
+
+% https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZAJgBoAGAXVJADcBDAGwFcYkQBlHGNAHV4AEARhABfUuky58hFGWLU6TVuy49+A4mIkgM2PASJkALIoYs2iTtz6CAzNsn6ZRY6VM1zKq-24APHGAASTgIAHMYMABPARwACxgIACcYAFtRR10pA1lkNwVPZUsQXxgA4NDU5LQ4rDhU2ITktIzxJ2lDFHJ3MyLVGw03DTVbAQBWUmGBwQA2TL0O3O6CpQt2UvKAVTAsWhgkuCYBAGEIPaSBejAoAQAFLABjeiSbsKSIZjRWnQWco1IhL01lYxIoYFAIggUKAAGbvVJIbogHAQJBCGiMegAIxgjFu2RcViwYGwsBAhWBIAAgnA4MxUjANGU6jg4Bp6BoAELNRgaOlYt4fNCZOEQBGIdHI1GIMggTE4vEEzogYmktgU7wgADiAHpOfwHgQwvxUvR4liscBbqIAHrAITfWHwpB2GgopDGNogUXi2XuxCu1aarUQHDssAaOrhSJRcly7G4-HOZVJLBhOI4EXOmVu6UTIPFU4knBJZgPHIaCAwrk8rNipD5-0zL0+pAAdlzaNElFEQA
+\begin{tikzcd}
+                                         &  & Step\ 1 \arrow[dd, "Assume\ exists\ a\ Borel\ subgroup" description]          &  &                                   \\
+                                         &  & {} \arrow[d]                                                                  &  &                                   \\
+\text{Universal Cover and Picard group}  &  & Step\ 2 \arrow[dd, "G/B\cong\mathbb{P}^{1}" description]                      &  & \text{Isomorphism theorem}        \\
+                                         &  &                                                                               &  &                                   \\
+{Step\ 4,\ Step\ 5,\ Step\ 6} \arrow[uu] &  & Step\ 3 \arrow[rr, "Got\ an\ isogeny"'] \arrow[ll, "Construction\ of\ Borel"] &  & \text{Isogeny theorem} \arrow[uu]
+\end{tikzcd}
+\end{center}
+\begin{thm}
+We assume $k=\bar{k}$. Let $G$ be semisimple with split maximal torus $T\leq G$. If rank $G$=1, then $G\cong SL_{2}$ or $G=PGL_{2}$.
+\end{thm}
+\begin{proof}
+\begin{step}
+If $k=\bar{k}$, $\textbf{dim}G/B=1$. \footnote{So far we don't show that $G$ has a Borel subgroup yet over $k$.}
+\end{step}
+\begin{proof}
+$G$ acts on $G/B$ by left translation. Note that split maximal torus is isomorphic to $T\cong\mathbb{G}_{m}$ because of rank 1. and recall that $G/B$ is in bijection with the set $\{Borels\ in\ G\}$ $(gB\rightarrow gBg^{-1})$ as a consequence of the theorem $N_{G}(B)=B$. Note that $\textbf{dim}G/B>0$, otherwise, $G=B$ is solvable and semisimple so $G=R(G)=1$, a contradiction. Hence,
+\begin{equation*}
+    2\leq\textbf{dim}G/B+1\leq \#\{T- fixed\ points\ in\ G/B \}=\#\{Borels\supset\ T\}=\# W(G/T)\leq2
+\end{equation*}
+For the second inequality, embed $G/B$ in some $\mathbb{P}V$ using the Chevally's theorem \ref{chevathm} and lemma \ref{lem1} above. For the first equality, $T$ fixes $gB\Leftrightarrow T\leq gBg^{-1}$ ($B$ is stabilizer of $B$). For the last inequality, $W(G,T)\leq \textbf{Aut}T=\textbf{Aut}\mathbb{G}_{m}=GL_{1}(\mathbb{Z})=\{\pm1\}$. 
+So we get $\textbf{dim}G/B=1 $. 
+\end{proof}
+
+\begin{step}\label{step2}
+If $k=\bar{k}$, then $G/B\cong \mathbb{P}^{1}$.
+\end{step}
+\begin{proof}
+As we know that $\textbf{dim} G/B=1$. We can construct a nonconstant morphism $\mathbb{P}^{1}\rightarrow G/B\subset \mathbb{P}V$ relative to any regular $1-psg\ \lambda\in Y(T)$, $T$ a maximal torus of $G$. Its image is closed, because $\mathbb{P}^{1}$ is complete. Hence equal to $G/B$, because $G/B$ is irreducible and of dimension 1. This implies that $G/B$ is isomorphic to $\mathbb{P}^{1}$. 
+\end{proof}
+\begin{step}\label{step3}
+If $k=\bar{k}$, then the resulting homomorphism 
+\begin{equation*}
+    \phi:G\rightarrow \textbf{Aut}(G/B)=\textbf{Aut}(\mathbb{P}^{1})\cong PGL_{2}=GL_{n}/\mathbb{G}_{m}
+\end{equation*}
+has finite kernel, which is an isogeny.
+\end{step}
+\begin{proof}
+
+
+
+
+
+The kernel $\textbf{ker}\phi\leq \bigcap\limits_{g\in G(k)}gBg^{-1}$ is contained in all the stabilizers of points of $G/B$. 
+Furthermore,
+\begin{equation*}
+    \bigg(\bigcap\limits_{g\in G(k)}gBg^{-1}\bigg)^{0}_{red}=R(G)=1,
+\end{equation*}
+\end{proof}
+\begin{step}
+Define the co-character $\lambda:\mathbb{G}_{m}\cong T\rightarrow G$. Then, $P_{G}(\lambda)$(points whose limit exists) is a Borel in G. 
+
+Same for $P_{G}(-\lambda)$.
+\end{step}
+\begin{proof}
+$k=\bar{k}$. In general, for an isogeny $\phi: G\rightarrow G'$ and $H\leq G$, all smooth connected, $H$ is solvable(resp. parabolic, resp. Borel) $\Leftrightarrow$ $\phi(H)$ is solvable(resp. parabolic, resp. Borel). The proof for this is \ref{lemonto}, but the proof for Borel and parabolic is omitted since we don't need it here.
+
+
+
+
+    The result is that it suffices to check that $\phi(P_{G}(\lambda))$ is a Borel in $PGL_{2}$. We know $\phi(P_{G}(\lambda))=P_{PGL_{2}}(\lambda')$ where $\lambda'=\phi\circ\lambda$ is nontrivial. We know what structure of the cocharacters of $PGL_{2}$ is. Since $T\cong\mathbb{G}_{m}$ fixes $0,\infty\in\mathbb{P}^{1}$, we get 
+
+
+    \begin{align*}
+    \lambda':&\mathbb{G}_{m}\rightarrow PGL_{2}\\
+    t&\rightarrow \bigg(\begin{array}{cc}
+        t^{r} &  0\\
+         0& 1
+    \end{array}\bigg)
+    \end{align*}
+
+
+for some $r\not=0\in\mathbb{Z}$. At this point, one can just calculate that 
+\begin{equation*}
+    P_{PGL_{2}}(\lambda')=
+    \bigg(\begin{array}{cc}
+         *&*  \\
+         0& *
+    \end{array}\bigg)
+or
+\bigg(\begin{array}{cc}
+     *&0  \\
+     *& *
+\end{array}\bigg)
+\end{equation*}
+and these are both Borel.
+\end{proof}
+\begin{rem}
+If $G\rightarrow G'$ is homomorphism between any algebraic groups, $\phi$ is an isogeny if $\textbf{ker}\phi$ and $G'/\textbf{Im}\phi$ are finite.
+\end{rem}
+\begin{step}
+Let $B=P_{G}(\lambda)$. Then, $G/B\cong \mathbb{P}^{1}$ over $k$.\footnote{This seems useless because it's direct result of step 2, but it's not going to be so trivial when it's not algebraically closed.}
+\end{step}
+\begin{proof}
+We only consider $k=\bar{k}$. So By the result of Step \ref{step2} before, it is true.
+\end{proof}
+\begin{step}
+Get $\phi:G\rightarrow PGL_{2}$ over $k$. This is a multiplicative isogeny.
+\end{step}
+\begin{proof}
+$k=\bar{k}$, Note
+
+\begin{equation*}
+    \textbf{ker}\phi\leq \bigcap gBg^{-1}\leq P_{G}(\lambda)\bigcap P_{G}(\lambda^{-1})=Z_{G}(\lambda)=C_{G}(T)=T
+\end{equation*}
+The last part is based on that $G$ is reductive.
+\end{proof}
+\begin{step}
+$G\cong SL_{2}$ or $PGL_{2}$.
+\end{step}
+
+
+\begin{enumerate}
+    \item The algebraic group $SL_{2}$ is simply-connected. Using algebraic geometry $X(G)=0=\textbf{Pic}(G)$. $SL_{2}$ is the universal cover of $PGL_{2}$; \cite{milneiAG}
+    \item We can prove this with relatively basic group theory, which can find in \cite{springer1994linear};
+    \item  Let $(G, T)$ and $(G', T')$ be split reductive algebraic groups over $k$ of semisimple rank 1, and let $f_{T}:T\rightarrow T'$ be an isogeny of tori. If $\phi=X^{*}(f_{T})$ is an isogeny of root data, then $f_{T}$ extends to a homomorphism $f:G\rightarrow G'$. 
+
+    When $G, G'$ are semisimple of rank 1. First assume that $G'=PGL_{2}$. Let $f:G\rightarrow PGL_{2}$ be the isogeny as we proved in \ref{step3} and $\phi$ the corresponding isogeny of root data. An isogeny $f:G\rightarrow G'$ induces a homomorphism $\phi:X'\rightarrow X$ of character groups once corresponding maximal tori $T$ and $T'=f(T)$ are chosen. Here $\phi$ is the cohomomorphism of the restriction $f_{T}$ of $f$ to $T$: $\phi(\chi')=\chi'\circ f_{T}$ for all $\chi'\in X'$. 
+    
+    And 
+    \begin{defi}
+    
+The maps $\phi$ and its dual $\check{\phi}: \check{X}\rightarrow\check{X'}$ satisfy the following conditions:
+    \begin{enumerate}
+        \item $\phi$ and $\check{\phi}$ are injective.
+        \item There exists a bijection $\alpha\rightarrow \alpha'$ from $R$ to $R'$ and positve integers $q(\alpha)$ defined by $q: R\rightarrow p^{\mathbb{N}}$, each an integral power of the characteristic exponent $p:= e^{\textbf{Char}(k)}$ of $k$, such that $\phi(\alpha')=q(\alpha)\alpha$ and $\check{\phi}(\check{\alpha})=q(\alpha)\check{\alpha'}$ for all $\alpha\in R$.
+        
+    \end{enumerate}
+A homomorphism $\phi:X'\rightarrow X$ with the conditions above is called an isogeny of root data. 
+    \end{defi}
+    \begin{rem}
+    The isogeny theorem states that every such isogeny is induced by an isogeny of the corresponding groups. But here we do not need to prove the full version of isogeny theorem. 
+    \end{rem}
+   
+\end{enumerate}
+\begin{proof}\label{proofisogeny}
+
+For such a group, the root datum is $(X,\{\pm\alpha\},\check{X},\{\pm\check{\alpha}\})$ with $<\alpha,\check{\alpha}>=2$. And we have shown that if $G$ is a semisimple group of rank 1 then there exists an isogeny $f:G\rightarrow PGL_{2}$\ by \ref{step3}. And the corresponding value of $q(\alpha)=q(-\alpha)$ is 1, which is shown as follow. Let $B=TU_{\alpha}$ and $V=U_{-\alpha}$. For $v\in V$ we get from $f(v)$ back to $v$ by applying the following sequence of morphisms. First restrict the action of $f(v)$ from $G/B$ to $VB/B\rightarrow V$ which comes from $VB=V_{\alpha}TU_{\alpha}$ is a direct product of its factors. So $f:V\rightarrow f(V)$ is an isomorphism and hence that $q(-\alpha)=1$.
+
+When $G\rightarrow G'$ are semisimple of rank 1. Assume first that $G'=PGL_{2}$. Let $f_{1}:G\rightarrow PGL_{2}$ as above and $\phi$ the corresponding isogeny of root data. It may be assumed that $f_{1}(T)=T'=\{the\ subgroup\ of\ diagonal\ matrices\ of PGL_{2}\}$. Then $\phi_{1}(\alpha')=\alpha$ and $\psi(\alpha')=q(\alpha)\alpha$, such that $\psi=q(\alpha)\phi_{1}$. Therefore $Frob_{q(\alpha)}\circ f_{1}$, with $Frob_{q(\alpha)}$ replaces all the coordinates by their $q(\alpha)$th powers, is an isogeny which realizes $\psi$.
+
+In case $G'\not=PGL_{2}$, let $g:G'\rightarrow PGL_{2}$ be any isogeny and $\iota$ the corresponding isogeny of root data. By the case just done there exists an isogeny $h: G\rightarrow PGL_{2}$ with $\psi\circ\iota$ as its isogeny of root data. Then by Chevally's theorem, the isogenies $h: G\rightarrow PGL_{2}$ and $g:G'\rightarrow PGL_{2}$, yields an isogeny $f:G\rightarrow G'$ with $\phi$ as its isogeny of root data as we want.
+
+\end{proof}
+
+For this part, we have shown that the isogeny of root data is induced by an isogeny of the corresponding groups. But the thing we want is isomorphism, so we need to fill this small gap.
+\begin{thm}
+Let $(G,T)$ and $(G',T')$ as same as above. An isomorphism $f:(G,T)\rightarrow (G',T')$ defines an isomorphism $\phi$ of root data, and every isomorphism of root data $\phi$ arises from an isomorphism $f$; Moreover, $f$ is uniquely determined by $\phi$ up to an inner automorphism by an element of T: $\sigma_{t}(g)=t^{-1}gt$.
+\end{thm}
+\begin{proof}
+isomorphism theorem: Let $\phi$ be an isomorphism of $R$ onto $R'$. By we have shown in proof above \ref{proofisogeny}. There exists isogenies $f:G\rightarrow G'$ and $g:G'\rightarrow G$ corresponding to $\phi$ and $\hat{\phi}$. Then $g\circ f$ corresponds to the identity isogeny of the root datum of $G$ and hence equals the inner automorphism $\sigma_{t}$ for some $t\in T$. Thus Let $g'=\sigma_{t^{-1}}\circ g$. Then $g'\circ f=Id$, and $f\circ g'\circ f=f$, which implies that $f\circ g'=Id$ because $f$ is surjective. Hence $f$ is an isomorphism with $g'$ as its inverse.
+\end{proof}
+
+
+
+
+The consequence of the result just prove is that every semisimple group of rank 1 is isomorphic to $SL_{2}$ or $PGL_{2}$ since these group realize that only possibilities for a root datum: either $\alpha/2$ is a generator for $X$ or else $\alpha$ is, because $<\alpha,\check{\alpha}>=2$
+\end{proof}
+\begin{rem}
+\begin{enumerate}
+    \item The algebraic geometry way of proof is a little advanced to fully understand but it's very nice to see this, which creates some motivation for scheme study.
+    \item The second way from \cite{springer1994linear} to prove is required a lot of calculation, which will cause problem to present it. And basically it used the same kind of method as the third way but without defining some fancy terminology.
+    \item The third way using isogeny theorem was first proved by Chevally in his famous seminar(1956-58), and he only considered the semisimple case, in which $\check{X}, \check{R}$ can be dispensed with. His proof for semisimple group of rank 2 is long and complicated. That is certainly the main case, and further the step from semisimple groups to reductive groups is a simple one. Takeuchi (1983) gave a proof of the isogeny theorem in the terms of "hyperalgebras" to avoid using systems of rank2, which gave ideas for Steinberg's simple proof. In the book \cite{milneiAG}, by using the language of groups schemes rather group varieties, Milne has extended the proof to split reductive groups over arbitrary fields.
+    
+
+\end{enumerate}
+
+\end{rem}
+
+
+
+
+
+\newpage
+\bibliographystyle{plain}
+\bibliography{bib.bib}
+\end{document}
